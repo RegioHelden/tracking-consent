@@ -61,3 +61,50 @@ function rh_fury_add_info_notice() {
 }
 
 add_action( 'wp_footer', 'rh_fury_add_info_notice' );
+
+
+// only on zephyr projects
+// see: https://docs.aurora.ci/handbook/environment-variable.html
+if ( RH_CONFIG['version'] === 'zephyr' ) :
+/**
+ * Customizer settings.
+ * 
+ * @param	WP_Customize_Manager		$wp_customize Theme Customizer object
+ */
+function rh_fury_customizer_register( $wp_customize ) {
+	$wp_customize->add_setting( 'tracking_js_textarea', [
+		'default' => '',
+		'type' => 'option',
+		'capability' => 'edit_theme_options',
+		'transport' => '',
+	] );
+	
+	$wp_customize->add_control( 'tracking_js_textarea', [
+		'type' => 'code_editor',
+		'setting' => 'js',
+		'input_attrs' => [
+			'class' => 'code',
+			// Ensures contents displayed as LTR instead of RTL.
+		],
+		'priority' => 10,
+		'section' => 'seo_analytics',
+		'label' => __( 'Tracking JavaScript code', 'rh-fury' ),
+		'description' => __( 'Don’t forget to add a beginning &lt;script&gt; and an ending &lt;/script&gt;.', 'rh-fury' ),
+	] );
+}
+
+add_action( 'customize_register', 'rh_fury_customizer_register', 20 );
+
+
+/**
+ * Add the tracking code to the footer.
+ */
+function rh_fury_tracking_code() {
+	// return if tracking nor allowed neither already asked for
+	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) return;
+	
+	echo get_option( 'tracking_js_textarea' );
+}
+
+add_action( 'wp_footer', 'rh_fury_tracking_code' );
+endif;
