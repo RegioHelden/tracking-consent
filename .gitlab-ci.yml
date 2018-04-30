@@ -15,7 +15,6 @@ stages:
     - production
     - test
 
-
 upload_phoenix_northstar:
     stage: test
 
@@ -28,6 +27,23 @@ upload_phoenix_northstar:
 
     variables:
         DEPLOY_PATH: ${PHOENIX_PATH_TEST_PLUGINS}/rh-fury
+        DEPLOY_SERVER: northstar.li
+
+        # GitLab group variables:
+        # - SSH_USER_TEST
+
+upload_wd50_northstar:
+    stage: test
+
+    script:
+        - cd deploy-script
+        - ./deploy.sh -u $SSH_USER_TEST -d $DEPLOY_PATH -h $DEPLOY_SERVER
+
+    only:
+        - master
+
+    variables:
+        DEPLOY_PATH: ${WD50_PATH_TEST_PLUGINS}/rh-fury
         DEPLOY_SERVER: northstar.li
 
         # GitLab group variables:
