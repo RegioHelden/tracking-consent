@@ -1,0 +1,34 @@
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    PHOENIX_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
+    PHOENIX_PATH_TEST_PLUGINS: /var/www/phoenix/wp-content/plugins
+    WD50_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
+    WD50_PATH_PRODUCTION_THEMES: /htdocs/wp-content/themes
+    WD50_PATH_TEST_PLUGINS: /var/www/wd50/wp-content/plugins
+    WD50_PATH_TEST_THEMES: /var/www/wd50/wp-content/themes
+
+before_script:
+    - git clone --branch=master --depth=1 --quiet git@git.aurora.ci:meta/deploy-script.git
+    - chmod +x deploy-script/*.sh
+
+stages:
+    - production
+    - test
+
+
+upload_phoenix_northstar:
+    stage: test
+
+    script:
+        - cd deploy-script
+        - ./deploy.sh -u $SSH_USER_TEST -d $DEPLOY_PATH -h $DEPLOY_SERVER
+
+    only:
+        - master
+
+    variables:
+        DEPLOY_PATH: ${PHOENIX_PATH_TEST_PLUGINS}/rh-fury
+        DEPLOY_SERVER: northstar.li
+
+        # GitLab group variables:
+        # - SSH_USER_TEST
