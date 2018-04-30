@@ -1,0 +1,72 @@
+/**
+ * SCSS style for “cookie” information notice.
+ */
+.gdpr-notice {
+	background-color: #f8f8f8;
+	bottom: 0;
+	box-shadow: 0 0 8px rgba(0, 0, 0, .25);
+	font-size: 1.3rem;
+	left: 0;
+	line-height: 1.5;
+	position: fixed;
+	right: 0;
+	z-index: 9999;
+	
+	@media (min-width: 840px) {
+		bottom: auto;
+		font-size: 1.5rem;
+		line-height: 1.7;
+		top: 0;
+		
+		> .container {
+			align-items: center;
+			display: flex;
+			justify-content: space-between;
+			padding: 2rem 4rem;
+		}
+		
+		.notice-content {
+			padding-right: 4rem;
+		}
+		
+		.admin-bar & {
+			top: 32px;
+		}
+	}
+	
+	button {
+		font-size: 1.7rem;
+	}
+	
+	p:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.notice-buttons {
+	margin-top: .5rem;
+	
+	@media (min-width: 840px) {
+		display: flex;
+		flex-direction: column;
+		margin-top: 0;
+		
+		> .gdpr-no-button {
+			margin-bottom: 1rem;
+			margin-top: 0;
+			order: -1;
+		}
+	}
+}
+
+.gdpr-no-button {
+	background-color: rgba(0, 0, 0, 0) !important;
+	color: inherit !important;
+	font-size: 1.3rem !important;
+	margin-top: 1rem;
+	padding: 0;
+	
+	&:hover {
+		text-decoration: underline;
+	}
+}
