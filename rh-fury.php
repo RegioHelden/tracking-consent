@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.1
+Version:		0.2.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -26,23 +26,36 @@ along with Fury. If not, see https://www.gnu.org/licenses/gpl-3.0.html.
 // exit if ABSPATH is not defined
 defined( 'ABSPATH' ) || exit;
 
-// load text domain
-load_plugin_textdomain( 'rh-fury', false, plugin_dir_path( __FILE__ ) . 'languages' );
+/**
+ * Load text domain.
+ */
+function rh_fury_load_textdomain() {
+	load_plugin_textdomain( 'rh-fury', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+
+add_action( 'init', 'rh_fury_load_textdomain' );
+
 
 /**
  * Add the “cookie” information notice.
  */
 function rh_fury_add_info_notice() {
+	// don’t add javascript if the gdpr cookie is set to true
+	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) :
+	// add javascript
+	$javascript = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/js/gdpr-notice.min.js' );
+	?>
+<script><?php echo $javascript; ?></script>
+	<?php
+	endif;
+	
 	// check for cookie
 	if ( isset( $_COOKIE['mws-gdpr'] ) ) return;
 	
 	// add stylesheet
 	$stylesheet = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/style/style.min.css' );
-	// add javascript
-	$javascript = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/js/gdpr-notice.min.js' );
 	?>
 <style><?php echo $stylesheet; ?></style>
-<script><?php echo $javascript; ?></script>
 
 <div id="gdpr-notice" class="gdpr-notice">
 	<div class="container">
@@ -60,7 +73,10 @@ function rh_fury_add_info_notice() {
 	<?php
 }
 
-add_action( 'wp_footer', 'rh_fury_add_info_notice' );
+// disable for WD50 until we have a valid notice text
+if ( RH_CONFIG['project'] != 'wd50' ) {
+	add_action( 'wp_footer', 'rh_fury_add_info_notice' );
+}
 
 
 // only on zephyr projects
@@ -100,10 +116,22 @@ add_action( 'customize_register', 'rh_fury_customizer_register', 20 );
  * Add the tracking code to the footer.
  */
 function rh_fury_tracking_code() {
-	// return if tracking nor allowed neither already asked for
-	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) return;
+	$disabled = false;
 	
-	echo get_option( 'tracking_js_textarea' );
+	// disable if tracking nor allowed neither already asked for
+	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) {
+		$disabled = true;
+	}
+	
+	// disable for WD50 until we have a valid notice text
+	if ( RH_CONFIG['project'] == 'wd50' ) {
+		$disabled = false;
+	}
+	
+	// remove every html comment
+	$option = preg_replace( '/<!--(.*?)-->/', '', get_option( 'tracking_js_textarea' ) );
+	
+	echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
 }
 
 add_action( 'wp_footer', 'rh_fury_tracking_code' );
