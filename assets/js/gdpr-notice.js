@@ -6,17 +6,21 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	var gdpr_no = document.getElementById( 'gdpr-no' );
 	var notice = document.getElementById( 'gdpr-notice' );
 	
+	// initialize on page load
 	set_height();
+	toggle_conversion_codes();
 	
 	window.onresize = function() {
 		set_height();
 	}
 	
+	// click on gdpr yes button
 	if ( gdpr_yes ) {
 		gdpr_yes.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', true, 30 );
 			document.body.removeAttribute( 'style' );
 			notice.remove();
+			toggle_conversion_codes();
 			
 			// check if cookie is really set
 			if ( get_cookie( 'mws-gdpr' ) === 'true' ) {
@@ -51,11 +55,13 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		} );
 	}
 	
+	// click on gdpr no button
 	if ( gdpr_no ) {
 		gdpr_no.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', false, 1 );
 			document.body.removeAttribute( 'style' );
 			notice.remove();
+			toggle_conversion_codes();
 		} );
 	}
 	
@@ -117,6 +123,61 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			}
 			else {
 				document.body.style.paddingTop = height + 'px';
+			}
+		}
+	}
+	
+	/**
+	 * Enable or disable Google conversion codes.
+	 */
+	function toggle_conversion_codes() {
+		var conversion_elements = document.querySelectorAll( '[onclick]' );
+		
+		if ( ! conversion_elements.length ) {
+			conversion_elements = document.querySelectorAll( '[data-onclick]' );
+		}
+		
+		for ( var i = 0; i < conversion_elements.length; i++ ) {
+			var element = conversion_elements[ i ];
+			
+			if ( get_cookie( 'mws-gdpr' ) === 'true' ) {
+				// set href for link elements
+				if ( element.tagName === 'A' || element.tagName === 'BUTTON' ) {
+					// don’t resort
+					var onclick = element.getAttribute( 'data-onclick' );
+					var regex = /\('([^'])+/g;
+					var result_array = regex.exec( onclick );
+					console.log(result_array);
+					var link = result_array[ 0 ].replace( '(\'', '' );
+					
+					element.href = link;
+				}
+				
+				// set our previously stored data-onclick attribute
+				element.setAttribute( 'onclick', element.getAttribute( 'data-onclick' ) );
+				element.removeAttribute( 'data-onclick' );
+			}
+			else {
+				var onclick = element.getAttribute( 'onclick' );
+				
+				// store onclick attribute in separate data attribute
+				element.setAttribute( 'data-onclick', onclick );
+				
+				if ( element.tagName === 'A' || element.tagName === 'BUTTON' ) {
+					// don’t resort
+					var regex = /\('([^'])+/g;
+					var result_array = regex.exec( onclick );
+					var link = result_array[ 0 ].replace( '(\'', '' );
+					
+					// set the real link
+					element.setAttribute( 'href', link );
+					// remove onclick
+					element.removeAttribute( 'onclick' );
+				}
+				else {
+					// set an onclick to open something on non-anchor elements
+					element.setAttribute( 'onclick', 'location.href=' + link );
+				}
 			}
 		}
 	}
