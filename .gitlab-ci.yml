@@ -23,7 +23,7 @@ wd50.extern:
         - ./deploy.sh -u $DEPLOY_SERVER -d $DEPLOY_PATH -h $DEPLOY_SERVER
     
     only:
-        - master
+        - tags
     
     variables:
         DEPLOY_PATH: ${WD50_PATH_PRODUCTION_PLUGINS}/rh-fury
