@@ -128,10 +128,12 @@ function rh_fury_tracking_code() {
 		$disabled = false;
 	}
 	
-	// remove every html comment
-	$option = preg_replace( '/<!--(.*?)-->/', '', get_option( 'tracking_js_textarea' ) );
-	
-	echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
+	if ( get_option( 'tracking_js_textarea' ) ) {
+		// remove every html comment
+		$option = preg_replace( '/<!--(.*?)-->/', '', get_option( 'tracking_js_textarea' ) );
+		
+		echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
+	}
 }
 
 add_action( 'wp_footer', 'rh_fury_tracking_code' );
