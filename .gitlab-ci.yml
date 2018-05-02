@@ -15,6 +15,20 @@ stages:
     - production
     - test
 
+wd50.extern:
+    stage: production
+    
+    script:
+        - cd deploy-script
+        - ./deploy.sh -u $DEPLOY_SERVER -d $DEPLOY_PATH -h $DEPLOY_SERVER
+    
+    only:
+        - master
+    
+    variables:
+        DEPLOY_PATH: ${WD50_PATH_PRODUCTION_PLUGINS}/rh-fury
+        DEPLOY_SERVER: wd50.extern.regiohelden.de
+
 upload_phoenix_northstar:
     stage: test
 
