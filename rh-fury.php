@@ -74,14 +74,14 @@ function rh_fury_add_info_notice() {
 }
 
 // disable for WD50 until we have a valid notice text
-if ( defined( RH_CONFIG ) && RH_CONFIG['project'] != 'wd50' ) {
+if ( defined( 'RH_CONFIG' ) && RH_CONFIG['project'] != 'wd50' ) {
 	add_action( 'wp_footer', 'rh_fury_add_info_notice' );
 }
 
 
 // only on zephyr projects
 // see: https://docs.aurora.ci/handbook/environment-variable.html
-if ( defined( RH_CONFIG ) && RH_CONFIG['version'] === 'zephyr' ) :
+if ( defined( 'RH_CONFIG' ) && RH_CONFIG['version'] === 'zephyr' ) :
 /**
  * Customizer settings.
  * 
