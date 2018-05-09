@@ -45,7 +45,7 @@ function rh_fury_add_info_notice() {
 	// add javascript
 	$javascript = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/js/gdpr-notice.min.js' );
 	?>
-<script><?php echo $javascript; ?></script>
+<script><?php echo str_replace( '//# sourceMappingURL=gdpr-notice.min.js.map', '', $javascript ); ?></script>
 	<?php
 	endif;
 	
@@ -55,7 +55,7 @@ function rh_fury_add_info_notice() {
 	// add stylesheet
 	$stylesheet = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/style/style.min.css' );
 	?>
-<style><?php echo $stylesheet; ?></style>
+<style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
 
 <div id="gdpr-notice" class="gdpr-notice">
 	<div class="container">
