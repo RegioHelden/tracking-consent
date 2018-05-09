@@ -2,6 +2,7 @@ variables:
     GIT_SUBMODULE_STRATEGY: recursive
     PHOENIX_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     PHOENIX_PATH_TEST_PLUGINS: /var/www/phoenix/wp-content/plugins
+    WDEX_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     WD50_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     WD50_PATH_PRODUCTION_THEMES: /htdocs/wp-content/themes
     WD50_PATH_TEST_PLUGINS: /var/www/wd50/wp-content/plugins
@@ -14,6 +15,20 @@ before_script:
 stages:
     - production
     - test
+
+webdesign.extern:
+    stage: production
+    
+    script:
+        - cd deploy-script
+        - ./deploy.sh -u $DEPLOY_SERVER -d $DEPLOY_PATH -h $DEPLOY_SERVER
+    
+    only:
+        - tags
+    
+    variables:
+        DEPLOY_PATH: ${WDEX_PATH_PRODUCTION_PLUGINS}/rh-fury
+        DEPLOY_SERVER: webdesign.extern.regiohelden.de
 
 wd50.extern:
     stage: production
