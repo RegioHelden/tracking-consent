@@ -113,20 +113,10 @@ add_action( 'customize_register', 'rh_fury_customizer_register', 20 );
 
 
 /**
- * Add the tracking code to the footer.
+ * Add the tracking code to the footer on Zephyr projects.
  */
-function rh_fury_tracking_code() {
-	$disabled = false;
-	
-	// disable if tracking nor allowed neither already asked for
-	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) {
-		$disabled = true;
-	}
-	
-	// disable for WD50 until we have a valid notice text
-	if ( RH_CONFIG['project'] == 'wd50' ) {
-		$disabled = false;
-	}
+function rh_fury_zephyr_tracking_code() {
+	$disabled = rh_fury_check_gdpr_cookie();
 	
 	if ( get_option( 'tracking_js_textarea' ) ) {
 		// remove every html comment
@@ -136,5 +126,53 @@ function rh_fury_tracking_code() {
 	}
 }
 
-add_action( 'wp_footer', 'rh_fury_tracking_code' );
+add_action( 'wp_footer', 'rh_fury_zephyr_tracking_code' );
 endif;
+
+// only on aster projects
+// see: https://docs.aurora.ci/handbook/environment-variable.html
+if ( defined( 'RH_CONFIG' ) && RH_CONFIG['version'] === 'aster' ) :
+/**
+ * Add the tracking code to the footer on Aster projects.
+ */
+function rh_fury_aster_tracking_code() {
+	$disabled = rh_fury_check_gdpr_cookie();
+	
+	if ( ! empty( $tocki_redux_themeoptions["tocki_redux_footer"] ) ) {
+		// remove every html comment
+		$option = preg_replace( '/<!--(.*?)-->/', '', $tocki_redux_themeoptions["tocki_redux_footer"] );
+		// set theme options "empty" to avoid our default tracking 
+		$tocki_redux_themeoptions["tocki_redux_footer"] = '<script></script>';
+		
+		echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
+	}
+	else {
+		// set theme options "empty" to avoid our default tracking
+		$tocki_redux_themeoptions["tocki_redux_footer"] = '<script></script>';
+	}
+}
+
+add_action( 'wp_footer', 'rh_fury_aster_tracking_code' );
+endif;
+
+
+/**
+ * Check if a GDPR cookie is set.
+ * 
+ * @return		boolean
+ */
+function rh_fury_check_gdpr_cookie() {
+	$disabled = false;
+	
+	// disable if tracking nor allowed neither already asked for
+	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) {
+		$disabled = true;
+	}
+	
+	// disable for webdesign.extern/wd50 until we have a valid notice text
+	if ( defined( 'RH_CONFIG' ) && ( RH_CONFIG['project'] == 'webdesign.extern' || RH_CONFIG['project'] == 'wd50' ) ) {
+		$disabled = false;
+	}
+	
+	return $disabled;
+}
