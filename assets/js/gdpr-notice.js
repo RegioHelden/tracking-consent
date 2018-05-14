@@ -25,11 +25,17 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			// check if cookie is really set
 			if ( get_cookie( 'mws-gdpr' ) === 'true' ) {
 				var rh_fury_tracking = document.getElementById( 'rh-fury-tracking' );
+				var rh_raw_html_tracking = document.querySelectorAll( '.rh-conversion-code' );
+				
 				// remove every html comment from the tracking div
 				rh_fury_tracking.innerHTML = rh_fury_tracking.innerHTML.replace( /<!--/, '' ).replace( /-->/, '' );
 				
+				for ( var i = 0; i < rh_raw_html_tracking.length; i++ ) {
+					rh_raw_html_tracking[ i ].innerHTML = rh_raw_html_tracking[ i ].innerHTML.replace( /<!--/, '' ).replace( /-->/, '' );
+				}
+				
 				// get all script tags inside the tracking div
-				var script_tags = rh_fury_tracking.querySelectorAll( 'script' );
+				var script_tags = document.querySelectorAll( '#rh-fury-tracking script, .rh-conversion-code script' );
 				
 				// insert every script tag inside the tracking div as a new
 				// script to execute it
@@ -51,6 +57,10 @@ document.addEventListener( 'DOMContentLoaded', function() {
 				
 				// remove tracking element because we don’t need it anymore
 				rh_fury_tracking.remove();
+				
+				for ( var i = 0; i < rh_raw_html_tracking.length; i++ ) {
+					rh_raw_html_tracking[ i ].remove();
+				}
 			}
 		} );
 	}
