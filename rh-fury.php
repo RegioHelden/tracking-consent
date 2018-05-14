@@ -74,7 +74,7 @@ function rh_fury_add_info_notice() {
 }
 
 // disable for webdesign.extern/WD50 until we have a valid notice text
-if ( defined( 'RH_CONFIG' ) && ( RH_CONFIG['project'] != 'webdesign.extern' && RH_CONFIG['project'] != 'wd50' ) ) {
+if ( defined( 'RH_CONFIG' ) && ( RH_CONFIG['project'] != 'webdesign.extern' && RH_CONFIG['project'] != 'wd50' ) || ( RH_CONFIG['environment'] == 'test' ) ) {
 	add_action( 'wp_footer', 'rh_fury_add_info_notice' );
 }
 
@@ -170,7 +170,7 @@ function rh_fury_check_gdpr_cookie() {
 	}
 	
 	// disable for webdesign.extern/wd50 until we have a valid notice text
-	if ( defined( 'RH_CONFIG' ) && ( RH_CONFIG['project'] == 'webdesign.extern' && RH_CONFIG['project'] == 'wd50' ) ) {
+	if ( defined( 'RH_CONFIG' ) && ( RH_CONFIG['project'] == 'webdesign.extern' && RH_CONFIG['project'] == 'wd50' ) || ( RH_CONFIG['environment'] == 'test' ) ) {
 		$disabled = false;
 	}
 	
