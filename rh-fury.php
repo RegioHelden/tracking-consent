@@ -58,25 +58,22 @@ function rh_fury_add_info_notice() {
 <style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
 
 <div id="gdpr-notice" class="gdpr-notice">
-	<div class="container">
+	<div class="container wrapper">
 		<div class="notice-content">
-			<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <br>
-			Mehr Informationen erhalten Sie in unserer <a href="/impressum/">Datenschutzerklärung</a>.</p>
+			<p>Um Ihnen auch in Zukunft das best&shy;mögliche Nutzungs&shy;erlebnis auf dieser Website bieten zu können, möchten wir Tracking-Dienste wie z.&thinsp;B. Google Analytics aktivieren, die Cookies nutzen, um Ihr Nutzer&shy;verhalten anony&shy;misiert zu speichern und zu analysieren. Dafür benötigen wir Ihre Zustimmung, die Sie jederzeit widerrufen können.<br>
+			Mehr Informationen über die genutzten Dienste erhalten Sie in unserer <a href="/impressum/">Datenschutzerklärung</a>.</p>
 		</div>
 		
 		<div class="notice-buttons">
-			<button id="gdpr-yes">Erlauben</button>
-			<button id="gdpr-no" class="gdpr-no-button">Verbieten</button>
+			<a id="gdpr-yes" class="btn">Erlauben</a>
+			<a id="gdpr-no" class="gdpr-no-button">Verbieten</a>
 		</div>
 	</div>
 </div>
 	<?php
 }
 
-// disable for webdesign.extern/WD50 until we have a valid notice text
-if ( defined( 'RH_CONFIG' ) && ( RH_CONFIG['project'] != 'webdesign.extern' && RH_CONFIG['project'] != 'wd50' ) || ( RH_CONFIG['environment'] == 'test' ) ) {
-	add_action( 'wp_footer', 'rh_fury_add_info_notice' );
-}
+add_action( 'wp_footer', 'rh_fury_add_info_notice' );
 
 
 // only on zephyr projects

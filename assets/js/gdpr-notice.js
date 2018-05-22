@@ -124,16 +124,9 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	function set_height() {
 		if ( notice ) {
 			var height = notice.offsetHeight;
-			var is_mobile = ! window.matchMedia( '(min-width: 840px)' ).matches;
 			
 			document.body.removeAttribute( 'style' );
-			
-			if ( is_mobile ) {
-				document.body.style.paddingBottom = height + 'px';
-			}
-			else {
-				document.body.style.paddingTop = height + 'px';
-			}
+			document.body.style.paddingBottom = height + 'px';
 		}
 	}
 	
