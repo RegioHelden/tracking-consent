@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.5.0
+Version:		0.6.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -164,11 +164,6 @@ function rh_fury_check_gdpr_cookie() {
 	// disable if tracking nor allowed neither already asked for
 	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) {
 		$disabled = true;
-	}
-	
-	// disable for webdesign.extern/wd50 until we have a valid notice text
-	if ( defined( 'RH_CONFIG' ) && ( RH_CONFIG['project'] == 'webdesign.extern' && RH_CONFIG['project'] == 'wd50' ) || ( RH_CONFIG['environment'] == 'test' ) ) {
-		$disabled = false;
 	}
 	
 	return $disabled;
