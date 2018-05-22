@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.6.0
+Version:		0.7.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -117,7 +117,7 @@ function rh_fury_zephyr_tracking_code() {
 	
 	if ( get_option( 'tracking_js_textarea' ) ) {
 		// remove every html comment
-		$option = preg_replace( '/<!--(.*?)-->/', '', get_option( 'tracking_js_textarea' ) );
+		$option = preg_replace( '/<!--((.|\n)*?)-->/', '', get_option( 'tracking_js_textarea' ) );
 		
 		echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
 	}
@@ -133,11 +133,13 @@ if ( defined( 'RH_CONFIG' ) && RH_CONFIG['version'] === 'aster' ) :
  * Add the tracking code to the footer on Aster projects.
  */
 function rh_fury_aster_tracking_code() {
+	global $tocki_redux_themeoptions;
+	
 	$disabled = rh_fury_check_gdpr_cookie();
 	
 	if ( ! empty( $tocki_redux_themeoptions["tocki_redux_footer"] ) ) {
 		// remove every html comment
-		$option = preg_replace( '/<!--(.*?)-->/', '', $tocki_redux_themeoptions["tocki_redux_footer"] );
+		$option = preg_replace( '/<!--((.|\n)*?)-->/', '', $tocki_redux_themeoptions["tocki_redux_footer"] );
 		// set theme options "empty" to avoid our default tracking 
 		$tocki_redux_themeoptions["tocki_redux_footer"] = '<script></script>';
 		
