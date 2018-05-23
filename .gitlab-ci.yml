@@ -44,6 +44,20 @@ wd50.extern:
         DEPLOY_PATH: ${WD50_PATH_PRODUCTION_PLUGINS}/rh-fury
         DEPLOY_SERVER: wd50.extern.regiohelden.de
 
+rh.de:
+    stage: production
+    
+    script:
+        - cd deploy-script
+        - ./deploy.sh -u $DEPLOY_SERVER -d $DEPLOY_PATH -h $DEPLOY_SERVER
+    
+    only:
+        - tags
+    
+    variables:
+        DEPLOY_PATH: ${PHOENIX_PATH_PRODUCTION_PLUGINS}/rh-fury
+        DEPLOY_SERVER: regiohelden.de
+
 upload_phoenix_northstar:
     stage: test
 
