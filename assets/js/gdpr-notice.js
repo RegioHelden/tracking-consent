@@ -28,9 +28,13 @@ document.addEventListener( 'DOMContentLoaded', function() {
 				var rh_raw_html_tracking = document.querySelectorAll( '.rh-conversion-code' );
 				
 				// remove every html comment from the tracking div
-				rh_fury_tracking.innerHTML = rh_fury_tracking.innerHTML.replace( /<!--/, '' ).replace( /-->/, '' );
+				if ( rh_fury_tracking ) {
+					rh_fury_tracking.innerHTML = rh_fury_tracking.innerHTML.replace( /<!--/, '' ).replace( /-->/, '' );
+				}
 				
 				for ( var i = 0; i < rh_raw_html_tracking.length; i++ ) {
+					if ( ! rh_raw_html_tracking[ i ] ) continue;
+					
 					rh_raw_html_tracking[ i ].innerHTML = rh_raw_html_tracking[ i ].innerHTML.replace( /<!--/, '' ).replace( /-->/, '' );
 				}
 				
