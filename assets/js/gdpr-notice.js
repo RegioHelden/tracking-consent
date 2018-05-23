@@ -60,9 +60,11 @@ document.addEventListener( 'DOMContentLoaded', function() {
 				}
 				
 				// remove tracking element because we don’t need it anymore
-				rh_fury_tracking.remove();
+				if ( rh_fury_tracking ) rh_fury_tracking.remove();
 				
 				for ( var i = 0; i < rh_raw_html_tracking.length; i++ ) {
+					if ( ! rh_raw_html_tracking[ i ] ) continue;
+					
 					rh_raw_html_tracking[ i ].remove();
 				}
 			}
