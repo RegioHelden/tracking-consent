@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.8.0
+Version:		0.9.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -61,7 +61,7 @@ function rh_fury_add_info_notice() {
 	<div class="container wrapper">
 		<div class="notice-content">
 			<p>Um Ihnen auch in Zukunft das best&shy;mögliche Nutzungs&shy;erlebnis auf dieser Website bieten zu können, möchten wir Tracking-Dienste wie z.&thinsp;B. Google Analytics aktivieren, die Cookies nutzen, um Ihr Nutzer&shy;verhalten anony&shy;misiert zu speichern und zu analysieren. Dafür benötigen wir Ihre Zustimmung, die Sie jederzeit widerrufen können.<br>
-			Mehr Informationen über die genutzten Dienste erhalten Sie in unserer <a href="/impressum/">Datenschutzerklärung</a>.</p>
+			Mehr Informationen über die genutzten Dienste erhalten Sie in unserer <a href="/impressum/" class="datenschutz-open-close">Datenschutzerklärung</a>.</p>
 		</div>
 		
 		<div class="notice-buttons">
@@ -121,6 +121,9 @@ function rh_fury_zephyr_tracking_code() {
 		
 		echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
 	}
+	else {
+		echo '<div id="rh-fury-tracking"></div>';
+	}
 }
 
 add_action( 'wp_footer', 'rh_fury_zephyr_tracking_code' );
@@ -148,6 +151,7 @@ function rh_fury_aster_tracking_code() {
 	else {
 		// set theme options "empty" to avoid our default tracking
 		$tocki_redux_themeoptions["tocki_redux_footer"] = '<script></script>';
+		echo '<div id="rh-fury-tracking"></div>';
 	}
 }
 
