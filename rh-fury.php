@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.9.0
+Version:		0.10.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -41,7 +41,7 @@ add_action( 'init', 'rh_fury_load_textdomain' );
  */
 function rh_fury_add_info_notice() {
 	// don’t add javascript if the gdpr cookie is set to true
-	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) :
+	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr']  ) :
 	// add javascript
 	$javascript = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/js/gdpr-notice.min.js' );
 	?>
@@ -65,7 +65,7 @@ function rh_fury_add_info_notice() {
 		</div>
 		
 		<div class="notice-buttons">
-			<a id="gdpr-yes" class="btn">Erlauben</a>
+			<a id="gdpr-yes" class="btn btn-primary">Erlauben</a>
 			<a id="gdpr-no" class="gdpr-no-button">Verbieten</a>
 		</div>
 	</div>
@@ -73,7 +73,9 @@ function rh_fury_add_info_notice() {
 	<?php
 }
 
-add_action( 'wp_footer', 'rh_fury_add_info_notice' );
+if ( rh_fury_site_is_tracking() ) {
+	add_action( 'wp_footer', 'rh_fury_add_info_notice' );
+}
 
 
 // only on zephyr projects
@@ -162,7 +164,7 @@ endif;
 /**
  * Check if a GDPR cookie is set.
  * 
- * @return		boolean
+ * @return		bool
  */
 function rh_fury_check_gdpr_cookie() {
 	$disabled = false;
@@ -173,4 +175,32 @@ function rh_fury_check_gdpr_cookie() {
 	}
 	
 	return $disabled;
+}
+
+/**
+ * Check if a website ha senabled tracking scripts.
+ * 
+ * @return		bool
+ */
+function rh_fury_site_is_tracking() {
+	$is_tracking = true;
+	
+	if ( defined( 'RH_CONFIG' ) && RH_CONFIG['version'] === 'zephyr' ) {
+		// get all options that enable or disable tracking
+		$analytics_disabled = get_theme_mod( 'rh_analytics_disable' );
+		$analytics_id = get_option( 'rh_analytics_id' );
+		$tracking_js = get_option( 'tracking_js_textarea' );
+		
+		if ( $tracking_js || ( $analytics_id && ! $analytics_disabled ) ) {
+			$is_tracking = true;
+		}
+		else {
+			$is_tracking = false;
+		}
+	}
+	else if ( defined( 'RH_CONFIG' ) && RH_CONFIG['version'] === 'aster' ) {
+		$is_tracking = (bool) ! empty( $tocki_redux_themeoptions["tocki_redux_footer"] );
+	}
+	
+	return $is_tracking;
 }
