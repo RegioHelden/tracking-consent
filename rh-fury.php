@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.11.0
+Version:		0.12.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -40,6 +40,8 @@ add_action( 'init', 'rh_fury_load_textdomain' );
  * Add the “cookie” information notice.
  */
 function rh_fury_add_info_notice() {
+	// don’t do anything if site is not tracking
+	if ( ! rh_fury_site_is_tracking() ) return;
 	// don’t add javascript if the gdpr cookie is set to true
 	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr']  ) :
 	// add javascript
@@ -73,9 +75,7 @@ function rh_fury_add_info_notice() {
 	<?php
 }
 
-if ( rh_fury_site_is_tracking() ) {
-	add_action( 'wp_footer', 'rh_fury_add_info_notice' );
-}
+add_action( 'wp_footer', 'rh_fury_add_info_notice' );
 
 
 // only on zephyr projects
@@ -142,17 +142,17 @@ function rh_fury_aster_tracking_code() {
 	
 	$disabled = rh_fury_check_gdpr_cookie();
 	
-	if ( ! empty( $tocki_redux_themeoptions["tocki_redux_footer"] ) ) {
+	if ( rh_fury_site_is_tracking() ) {
 		// remove every html comment
-		$option = preg_replace( '/<!--((.|\n)*?)-->/', '', $tocki_redux_themeoptions["tocki_redux_footer"] );
+		$option = preg_replace( '/<!--((.|\n)*?)-->/', '', $tocki_redux_themeoptions['tocki_redux_footer'] );
 		// set theme options "empty" to avoid our default tracking 
-		$tocki_redux_themeoptions["tocki_redux_footer"] = '<script></script>';
+		$tocki_redux_themeoptions['tocki_redux_footer'] = '<script></script>';
 		
 		echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
 	}
 	else {
 		// set theme options "empty" to avoid our default tracking
-		$tocki_redux_themeoptions["tocki_redux_footer"] = '<script></script>';
+		$tocki_redux_themeoptions['tocki_redux_footer'] = '<script></script>';
 		echo '<div id="rh-fury-tracking"></div>';
 	}
 }
@@ -178,11 +178,13 @@ function rh_fury_check_gdpr_cookie() {
 }
 
 /**
- * Check if a website ha senabled tracking scripts.
+ * Check if a website has enabled tracking scripts.
  * 
  * @return		bool
  */
 function rh_fury_site_is_tracking() {
+	global $tocki_redux_themeoptions;
+	
 	$is_tracking = true;
 	
 	if ( defined( 'RH_CONFIG' ) && RH_CONFIG['version'] === 'zephyr' ) {
@@ -199,7 +201,7 @@ function rh_fury_site_is_tracking() {
 		}
 	}
 	else if ( defined( 'RH_CONFIG' ) && RH_CONFIG['version'] === 'aster' ) {
-		$is_tracking = (bool) ! empty( $tocki_redux_themeoptions["tocki_redux_footer"] );
+		$is_tracking = (bool) ! empty( $tocki_redux_themeoptions['tocki_redux_footer'] );
 	}
 	
 	return $is_tracking;
