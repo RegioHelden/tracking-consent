@@ -18,7 +18,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	if ( gdpr_yes ) {
 		gdpr_yes.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', true, 30 );
-			document.body.removeAttribute( 'style' );
+			document.body.style.removeProperty( 'paddingBottom' );
 			notice.remove();
 			toggle_conversion_codes();
 			
@@ -131,7 +131,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		if ( notice ) {
 			var height = notice.offsetHeight;
 			
-			document.body.removeAttribute( 'style' );
+			document.body.style.removeProperty( 'paddingBottom' );
 			document.body.style.paddingBottom = height + 'px';
 		}
 	}
