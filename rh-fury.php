@@ -63,7 +63,7 @@ function rh_fury_add_info_notice() {
 	<div class="container wrapper">
 		<div class="notice-content">
 			<p>Um Ihnen auch in Zukunft das best&shy;mögliche Nutzungs&shy;erlebnis auf dieser Website bieten zu können, möchten wir Tracking-Dienste wie z.&thinsp;B. Google Analytics aktivieren, die Cookies nutzen, um Ihr Nutzer&shy;verhalten anony&shy;misiert zu speichern und zu analysieren. Dafür benötigen wir Ihre Zustimmung, die Sie jederzeit widerrufen können.<br>
-			Mehr Informationen über die genutzten Dienste erhalten Sie in unserer <a href="/impressum/" class="datenschutz-open-close">Datenschutzerklärung</a>.</p>
+			Mehr Informationen über die genutzten Dienste erhalten Sie in unserer <a href="<?php echo ( defined( 'RH_CONFIG' ) && RH_CONFIG['project'] === 'phoenix' ? '/datenschutzerklaerung/' : '/impressum/' ); ?>" class="datenschutz-open-close">Datenschutzerklärung</a>.</p>
 		</div>
 		
 		<div class="notice-buttons">
