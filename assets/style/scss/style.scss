@@ -5,6 +5,7 @@
 	background-color: #f8f8f8;
 	bottom: 0;
 	box-shadow: 0 0 8px rgba(0, 0, 0, .25);
+	color: #333;
 	font-size: 13px;
 	left: 0;
 	line-height: 1.5;
@@ -30,6 +31,10 @@
 		.notice-content {
 			padding-right: 40px;
 		}
+	}
+	
+	a:not(.btn) {
+		color: #000;
 	}
 	
 	p:last-child {
