@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.13.2
+Version:		0.13.3
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -116,16 +116,34 @@ add_action( 'customize_register', 'rh_fury_customizer_register', 20 );
  */
 function rh_fury_zephyr_tracking_code() {
 	$disabled = rh_fury_check_gdpr_cookie();
+	$options = '';
 	
 	if ( get_option( 'tracking_js_textarea' ) ) {
 		// remove every html comment
-		$option = preg_replace( '/<!--((.|\n)*?)-->/', '', get_option( 'tracking_js_textarea' ) );
-		
-		echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
+		$options .= preg_replace( '/<!--((.|\n)*?)-->/', '', get_option( 'tracking_js_textarea' ) );
 	}
-	else {
-		echo '<div id="rh-fury-tracking"></div>';
+	
+	if ( get_option( 'rh_analytics_id' ) && ! get_theme_mod( 'rh_analytics_disable' ) ) {
+		$options .= "
+<script>
+	// disable tracking if the opt-out cookie exists.
+	var disableStr = 'ga-disable-" . get_option( 'rh_analytics_id' ) . "';
+	if (document.cookie.indexOf(disableStr + '=true') > -1) {
+		window[disableStr] = true;
 	}
+	
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', '" . get_option( 'rh_analytics_id' ) . "', 'auto');
+	ga('create', 'UA-63619645-1', 'auto', 'clientTracker');
+	ga('send', 'pageview');
+	ga('set', 'anonymizeIp', true);
+	ga('clientTracker.send', 'pageview');
+	" . do_action( 'rh_analytics_after_include' ) . "
+</script>
+";
+	}
+	
+	echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $options . ( $disabled ? '-->' : '' ) . '</div>';
 }
 
 add_action( 'wp_footer', 'rh_fury_zephyr_tracking_code' );
