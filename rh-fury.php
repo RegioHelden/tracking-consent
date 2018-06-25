@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.15.1
+Version:		0.15.2
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -61,7 +61,7 @@ function rh_fury_add_info_notice() {
 	$privacy_link = get_option( 'rh_fury_privacy_link' );
 	
 	if ( $privacy_link === false ) {
-		add_option( 'rh_fury_privacy_link', '/impressum/' );
+		add_option( 'rh_fury_privacy_link', '/datenschutz/' );
 		
 		$privacy_link = get_option( 'rh_fury_privacy_link' );
 	}
