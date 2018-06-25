@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fury\n"
 "POT-Creation-Date: 2018-06-25 10:20+0200\n"
-"PO-Revision-Date: 2018-06-25 10:21+0200\n"
+"PO-Revision-Date: 2018-06-25 10:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -29,40 +29,39 @@ msgid ""
 "user behaviour. For this, we need your consent, which you can revoke at any "
 "time."
 msgstr ""
-"Um Ihnen auch in Zukunft das best&shy;mögliche Nutzungs&shy;erlebnis auf "
-"dieser Website bieten zu können, möchten wir Tracking-Dienste wie z.&thinsp;"
-"B. Google Analytics aktivieren, die Cookies nutzen, um Ihr Nutzer&shy;"
-"verhalten anony&shy;misiert zu speichern und zu analysieren. Dafür benötigen "
-"wir Ihre Zustimmung, die Sie jederzeit widerrufen können."
+"Al fine di offrire all’utente una migliore esperienza di uso su questo sito "
+"offriamo servizi di tracciamento, quali ad esempio l’abilitazione di Google "
+"Analytics, che utilizza i cookie per raccogliere e analizzare in forma "
+"anonima il comportamento dell’utente."
 
 #: rh-fury.php:66
 #, php-format
 msgid "For more information about the services used, please, see our %s."
 msgstr ""
-"Mehr Informationen über die genutzten Dienste erhalten Sie in unserer %s."
+"Per questo motivo abbiamo bisogno del suo consenso, che potrà essere "
+"revocato in qualsivoglia momento. Per maggiori informazioni sui servizi "
+"utilizzati consultare %s."
 
 #: rh-fury.php:66
 msgid "privacy policy"
-msgstr "Datenschutzerklärung"
+msgstr "la nostra informativa sulla privacy"
 
 #: rh-fury.php:70
 msgid "Allow"
-msgstr "Erlauben"
+msgstr "Permettere"
 
 #: rh-fury.php:71
 msgid "Prohibit"
-msgstr "Verbieten"
+msgstr "Negare"
 
 #: rh-fury.php:106
 msgid "Tracking JavaScript code"
-msgstr "JavaScript-Tracking-Code"
+msgstr "JavaScript Tracking Code"
 
 #: rh-fury.php:107
 msgid ""
 "Don’t forget to add a beginning &lt;script&gt; and an ending &lt;/script&gt;."
 msgstr ""
-"Vergessen Sie nicht, ein öffnendes &lt;script&gt; und ein schließendes &lt;/"
-"script&gt; zu verwenden."
 
 #. Plugin Name of the plugin/theme
 msgid "Fury"
@@ -70,7 +69,7 @@ msgstr "Fury"
 
 #. Description of the plugin/theme
 msgid "GDPR-compliant tool set to disable or re-enable tracking."
-msgstr "Werkzeuge zur DSGVO-konformen Nutzung von Tracking."
+msgstr ""
 
 #. Author of the plugin/theme
 msgid "Matthias Kittsteiner"

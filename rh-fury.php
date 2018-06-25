@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.13.3
+Version:		0.14.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -62,13 +62,13 @@ function rh_fury_add_info_notice() {
 <div id="gdpr-notice" class="gdpr-notice">
 	<div class="container wrapper">
 		<div class="notice-content">
-			<p>Um Ihnen auch in Zukunft das best&shy;mögliche Nutzungs&shy;erlebnis auf dieser Website bieten zu können, möchten wir Tracking-Dienste wie z.&thinsp;B. Google Analytics aktivieren, die Cookies nutzen, um Ihr Nutzer&shy;verhalten anony&shy;misiert zu speichern und zu analysieren. Dafür benötigen wir Ihre Zustimmung, die Sie jederzeit widerrufen können.<br>
-			Mehr Informationen über die genutzten Dienste erhalten Sie in unserer <a href="<?php echo ( defined( 'RH_CONFIG' ) && RH_CONFIG['project'] === 'phoenix' ? '/datenschutzerklaerung/' : '/impressum/' ); ?>" class="datenschutz-open-close">Datenschutzerklärung</a>.</p>
+			<p><?php _e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate tracking services such as Google Analytics, which uses cookies to anonymously store and analyse your user behaviour. For this, we need your consent, which you can revoke at any time.', 'rh-fury' ); ?><br>
+			<?php printf( __( 'For more information about the services used, please, see our %s.', 'rh-fury' ), '<a href="' . ( defined( 'RH_CONFIG' ) && RH_CONFIG['project'] === 'phoenix' ? '/datenschutzerklaerung/' : '/impressum/' ) . '" class="datenschutz-open-close">' . __( 'privacy policy', 'rh-fury' ) . '</a>' ); ?></p>
 		</div>
 		
 		<div class="notice-buttons">
-			<a id="gdpr-yes" class="btn btn-primary">Erlauben</a>
-			<a id="gdpr-no" class="gdpr-no-button">Verbieten</a>
+			<a id="gdpr-yes" class="btn btn-primary"><?php __( 'Allow', 'rh-fury' ); ?></a>
+			<a id="gdpr-no" class="gdpr-no-button"><?php __( 'Prohibit', 'rh-fury' ); ?></a>
 		</div>
 	</div>
 </div>
