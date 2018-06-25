@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.15.0
+Version:		0.15.1
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -58,10 +58,12 @@ function rh_fury_add_info_notice() {
 	$stylesheet = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/style/style.min.css' );
 	
 	// get privacy link
-	$privacy_link = get_option( 'rh_fury_privacy_link', '' );
+	$privacy_link = get_option( 'rh_fury_privacy_link' );
 	
-	if ( empty( $privacy_link ) ) {
-		$privacy_link = ( defined( 'RH_CONFIG' ) && RH_CONFIG['project'] === 'phoenix' ? '/datenschutzerklaerung/' : '/impressum/' );
+	if ( $privacy_link === false ) {
+		add_option( 'rh_fury_privacy_link', '/impressum/' );
+		
+		$privacy_link = get_option( 'rh_fury_privacy_link' );
 	}
 	?>
 <style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
@@ -83,16 +85,6 @@ function rh_fury_add_info_notice() {
 }
 
 add_action( 'wp_footer', 'rh_fury_add_info_notice' );
-
-
-/**
- * Add privacy link option once while activating the plugin.
- */
-function rh_fury_add_privacy_link_option() {
-	add_option( 'rh_fury_privacy_link', '' );
-}
-
-register_activation_hook( __FILE__, 'rh_fury_add_privacy_link_option' );
 
 
 // only on zephyr projects
