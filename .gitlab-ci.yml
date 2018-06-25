@@ -80,7 +80,7 @@ upload_wd50_northstar:
 
     script:
         - cd deploy-script
-        - ./deploy.sh -u $SSH_USER_TEST -d $DEPLOY_PATH -h $DEPLOY_SERVER
+        - ./deploy.sh -u $SSH_USER_TEST -d $DEPLOY_PATH -h $DEPLOY_SERVER --zip
 
     only:
         - master
