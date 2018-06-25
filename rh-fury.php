@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.14.1
+Version:		0.15.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,13 @@ function rh_fury_add_info_notice() {
 	
 	// add stylesheet
 	$stylesheet = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/style/style.min.css' );
+	
+	// get privacy link
+	$privacy_link = get_option( 'rh_fury_privacy_link', '' );
+	
+	if ( empty( $privacy_link ) ) {
+		$privacy_link = ( defined( 'RH_CONFIG' ) && RH_CONFIG['project'] === 'phoenix' ? '/datenschutzerklaerung/' : '/impressum/' );
+	}
 	?>
 <style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
 
@@ -63,7 +70,7 @@ function rh_fury_add_info_notice() {
 	<div class="container wrapper">
 		<div class="notice-content">
 			<p><?php _e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate tracking services such as Google Analytics, which uses cookies to anonymously store and analyse your user behaviour. For this, we need your consent, which you can revoke at any time.', 'rh-fury' ); ?><br>
-			<?php printf( __( 'For more information about the services used, please, see our %s.', 'rh-fury' ), '<a href="' . ( defined( 'RH_CONFIG' ) && RH_CONFIG['project'] === 'phoenix' ? '/datenschutzerklaerung/' : '/impressum/' ) . '" class="datenschutz-open-close">' . __( 'privacy policy', 'rh-fury' ) . '</a>' ); ?></p>
+			<?php printf( __( 'For more information about the services used, please, see our %s.', 'rh-fury' ), '<a href="' . $privacy_link . '" class="datenschutz-open-close">' . __( 'privacy policy', 'rh-fury' ) . '</a>' ); ?></p>
 		</div>
 		
 		<div class="notice-buttons">
@@ -76,6 +83,16 @@ function rh_fury_add_info_notice() {
 }
 
 add_action( 'wp_footer', 'rh_fury_add_info_notice' );
+
+
+/**
+ * Add privacy link option once while activating the plugin.
+ */
+function rh_fury_add_privacy_link_option() {
+	add_option( 'rh_fury_privacy_link', '' );
+}
+
+register_activation_hook( __FILE__, 'rh_fury_add_privacy_link_option' );
 
 
 // only on zephyr projects
