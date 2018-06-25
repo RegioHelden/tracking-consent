@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.14.0
+Version:		0.14.1
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -67,8 +67,8 @@ function rh_fury_add_info_notice() {
 		</div>
 		
 		<div class="notice-buttons">
-			<a id="gdpr-yes" class="btn btn-primary"><?php __( 'Allow', 'rh-fury' ); ?></a>
-			<a id="gdpr-no" class="gdpr-no-button"><?php __( 'Prohibit', 'rh-fury' ); ?></a>
+			<a id="gdpr-yes" class="btn btn-primary"><?php _e( 'Allow', 'rh-fury' ); ?></a>
+			<a id="gdpr-no" class="gdpr-no-button"><?php _e( 'Prohibit', 'rh-fury' ); ?></a>
 		</div>
 	</div>
 </div>
