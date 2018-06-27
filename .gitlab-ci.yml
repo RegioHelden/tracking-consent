@@ -2,6 +2,7 @@ variables:
     GIT_SUBMODULE_STRATEGY: recursive
     PHOENIX_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     PHOENIX_PATH_TEST_PLUGINS: /var/www/phoenix/wp-content/plugins
+    PROJECT_NAME: rh-fury
     WDEX_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     WD50_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     WD50_PATH_PRODUCTION_THEMES: /htdocs/wp-content/themes
@@ -13,8 +14,9 @@ before_script:
     - chmod +x deploy-script/*.sh
 
 stages:
-    - production
+    - code sniffer
     - test
+    - production
 
 webdesign.extern:
     stage: production
@@ -27,7 +29,7 @@ webdesign.extern:
         - tags
     
     variables:
-        DEPLOY_PATH: ${WDEX_PATH_PRODUCTION_PLUGINS}/rh-fury
+        DEPLOY_PATH: ${WDEX_PATH_PRODUCTION_PLUGINS}/${PROJECT_NAME}
         DEPLOY_SERVER: webdesign.extern.regiohelden.de
 
 wd50.extern:
@@ -41,7 +43,7 @@ wd50.extern:
         - tags
     
     variables:
-        DEPLOY_PATH: ${WD50_PATH_PRODUCTION_PLUGINS}/rh-fury
+        DEPLOY_PATH: ${WD50_PATH_PRODUCTION_PLUGINS}/${PROJECT_NAME}
         DEPLOY_SERVER: wd50.extern.regiohelden.de
 
 rh.de:
@@ -55,7 +57,7 @@ rh.de:
         - tags
     
     variables:
-        DEPLOY_PATH: ${PHOENIX_PATH_PRODUCTION_PLUGINS}/rh-fury
+        DEPLOY_PATH: ${PHOENIX_PATH_PRODUCTION_PLUGINS}/${PROJECT_NAME}
         DEPLOY_SERVER: regiohelden.de
 
 upload_phoenix_northstar:
@@ -69,7 +71,7 @@ upload_phoenix_northstar:
         - master
 
     variables:
-        DEPLOY_PATH: ${PHOENIX_PATH_TEST_PLUGINS}/rh-fury
+        DEPLOY_PATH: ${PHOENIX_PATH_TEST_PLUGINS}/${PROJECT_NAME}
         DEPLOY_SERVER: northstar.li
 
         # GitLab group variables:
@@ -86,8 +88,21 @@ upload_wd50_northstar:
         - master
 
     variables:
-        DEPLOY_PATH: ${WD50_PATH_TEST_PLUGINS}/rh-fury
+        DEPLOY_PATH: ${WD50_PATH_TEST_PLUGINS}/${PROJECT_NAME}
         DEPLOY_SERVER: northstar.li
 
         # GitLab group variables:
         # - SSH_USER_TEST
+
+code_sniffer:
+    stage: code sniffer
+    
+    script:
+        - cp /home/gitlab-runner/phpcs/ruleset.xml .
+        - sed -i "s/PROJECT_NAME/${PROJECT_NAME/-/_}/g" ruleset.xml
+        - phpcs --standard=ruleset.xml *
+    
+    only:
+        - master
+    
+    allow_failure: true
