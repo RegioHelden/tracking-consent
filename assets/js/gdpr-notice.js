@@ -18,8 +18,10 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	if ( gdpr_yes ) {
 		gdpr_yes.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', true, 30 );
+			set_cookie( 'rh_armor_access', 1, 30 );
 			document.body.style.removeProperty( 'paddingBottom' );
 			notice.remove();
+			click_button( 'allow' );
 			toggle_conversion_codes();
 			
 			// check if cookie is really set
@@ -75,10 +77,32 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	if ( gdpr_no ) {
 		gdpr_no.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', false, 1 );
+			set_cookie( 'rh_armor_access', 1, 1 );
 			document.body.removeAttribute( 'style' );
 			notice.remove();
+			click_button( 'prohibit' );
 			toggle_conversion_codes();
 		} );
+	}
+	
+	/**
+	 * A.R.M.O.R. tracking log.
+	 * 
+	 * if value: true, tracking is allowed
+	 * if value: false, tracking is prohibited
+	 * 
+	 * @param	{String}		value
+	 */
+	function click_button( value ) {
+		var xhr = new XMLHttpRequest();
+		xhr.open( 'POST', 'https://armor.northstar.li/index.php?action=insert', true );
+		xhr.setRequestHeader( 'Accept', 'application/json' );
+		xhr.setRequestHeader( 'Content-type', 'application/json' );
+		xhr.send( JSON.stringify( {
+			table: 'consent',
+			time: Math.floor( Date.now() / 1000 ),
+			value: value
+		} ) );
 	}
 	
 	/**
