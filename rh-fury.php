@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.15.3
+Version:		0.16.0
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -68,7 +68,7 @@ function rh_fury_add_info_notice() {
 	?>
 <style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
 
-<div id="gdpr-notice" class="gdpr-notice">
+<div id="gdpr-notice" class="gdpr-notice<?php echo ( wp_is_mobile() ? ' gdpr-mobile' : ' gdpr-desktop' ); ?>">
 	<div class="container wrapper">
 		<div class="notice-content">
 			<p><?php _e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate tracking services such as Google Analytics, which uses cookies to anonymously store and analyse your user behaviour. For this, we need your consent, which you can revoke at any time.', 'rh-fury' ); ?><br>

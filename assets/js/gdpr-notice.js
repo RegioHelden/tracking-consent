@@ -99,9 +99,11 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		xhr.setRequestHeader( 'Accept', 'application/json' );
 		xhr.setRequestHeader( 'Content-type', 'application/json' );
 		xhr.send( JSON.stringify( {
+			device_type: notice.classList.contains( 'gdpr-mobile' ) ? 'mobile' : 'desktop',
 			table: 'consent',
 			time: Math.floor( Date.now() / 1000 ),
-			value: value
+			value: value,
+			website: window.location.href,
 		} ) );
 	}
 	
