@@ -99,7 +99,8 @@ code_sniffer:
     
     script:
         - cp /home/gitlab-runner/phpcs/ruleset.xml .
-        - sed -i "s/PROJECT_NAME/${PROJECT_NAME/-/_}/g" ruleset.xml
+        - sed -i "s/PROJECT_NAME_UNDERLINE/${PROJECT_NAME/-/_}/g" ruleset.xml
+        - sed -i "s/PROJECT_NAME/${PROJECT_NAME}/g" ruleset.xml
         - phpcs --standard=ruleset.xml *
     
     only:
