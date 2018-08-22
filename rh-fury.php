@@ -233,3 +233,57 @@ function rh_fury_site_is_tracking() {
 	
 	return $is_tracking;
 }
+
+/**
+ * Detect tracking scripts in the tracking JavaScript.
+ */
+function rh_fury_detect_tracking_scripts() {
+	$option = [];
+	$script_content = get_option( 'tracking_js_textarea' );
+	
+	// Google Analytics
+	if (
+		strpos( $script_content, 'analytics' ) !== false
+		|| get_option( 'rh_analytics_id' )
+	) {
+		$option[] = 'google-analytics';
+	}
+	
+	// Google Tag Manager
+	if (
+		strpos( $script_content, 'gtag' ) !== false
+		|| strpos( $script_content, 'googletagmanager' )
+	) {
+		$option[] = 'google-tag-manager';
+	}
+	
+	// Google Remarketing
+	if (
+		strpos( $script_content, 'gtag(\'config\', \'AW-' ) !== false
+		|| strpos( $script_content, 'google_conversion_id' ) !== false
+		|| strpos( $script_content, 'google_remarketing' ) !== false
+		|| strpos( $script_content, 'goog_report_conversion' ) !== false
+		|| strpos( $script_content, 'conversion_async' ) !== false
+	) {
+		$option[] = 'google-remarketing';
+	}
+	
+	// Google Click Identifier
+	if ( strpos( $script_content, 'gclid' ) !== false ) {
+		$option[] = 'google-click-identifier';
+	}
+	
+	// Facebook Pixel
+	if ( strpos( $script_content, 'connect.facebook.net/en_US/fbevents.js' ) !== false ) {
+		$option[] = 'facebook-pixel';
+	}
+	
+	// Bing Tracking
+	if ( strpos( $script_content, 'bat.bing.com' ) !== false ) {
+		$option[] = 'bing-tracking';
+	}
+	
+	update_option( 'rh_fury_tracking_scripts', $option );
+}
+
+add_action( 'customize_save_after', 'rh_fury_detect_tracking_scripts' );
