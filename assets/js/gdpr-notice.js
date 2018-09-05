@@ -7,6 +7,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	var notice = document.getElementById( 'gdpr-notice' );
 	
 	// initialize on page load
+	access_log();
 	set_height();
 	toggle_conversion_codes();
 	
@@ -83,6 +84,26 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			click_button( 'prohibit' );
 			toggle_conversion_codes();
 		} );
+	}
+	
+	/**
+	 * A.R.M.O.R. access log.
+	 */
+	function access_log() {
+		if ( get_cookie( 'rh_armor_access' ) ) return;
+		
+		var xhr = new XMLHttpRequest();
+		xhr.open( 'POST', 'https://armor.northstar.li/index.php?action=insert', true );
+		xhr.setRequestHeader( 'Accept', 'application/json' );
+		xhr.setRequestHeader( 'Content-type', 'application/json' );
+		xhr.send( JSON.stringify( {
+			device_type: notice.classList.contains( 'gdpr-mobile' ) ? 'mobile' : 'desktop',
+			table: 'access',
+			time: Math.floor( Date.now() / 1000 ),
+			website: window.location.href,
+		} ) );
+		
+		set_cookie( 'rh_armor_access', 1, 0 );
 	}
 	
 	/**
