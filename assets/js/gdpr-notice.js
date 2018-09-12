@@ -175,7 +175,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	 * Calculate info notice height
 	 */
 	function set_height() {
-		if ( notice ) {
+		if ( notice && ! notice.classList.contains( 'fullscreen' ) ) {
 			var height = notice.offsetHeight;
 			
 			document.body.style.removeProperty( 'paddingBottom' );
