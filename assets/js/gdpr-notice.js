@@ -20,10 +20,13 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		gdpr_yes.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', true, 30 );
 			set_cookie( 'rh_armor_access', 1, 30 );
-			document.body.removeAttribute( 'style' );
 			notice.remove();
 			click_button( 'allow' );
 			toggle_conversion_codes();
+			
+			if ( notice && ! notice.classList.contains( 'fullscreen' ) ) {
+				document.body.removeAttribute( 'style' );
+			}
 			
 			// check if cookie is really set
 			if ( get_cookie( 'mws-gdpr' ) === 'true' ) {
@@ -79,10 +82,13 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		gdpr_no.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', false, 1 );
 			set_cookie( 'rh_armor_access', 1, 1 );
-			document.body.removeAttribute( 'style' );
 			notice.remove();
 			click_button( 'prohibit' );
 			toggle_conversion_codes();
+			
+			if ( notice && ! notice.classList.contains( 'fullscreen' ) ) {
+				document.body.removeAttribute( 'style' );
+			}
 		} );
 	}
 	
