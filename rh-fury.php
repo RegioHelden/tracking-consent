@@ -13,12 +13,12 @@ Fury is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 any later version.
- 
+
 Fury is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
- 
+
 You should have received a copy of the GNU General Public License
 along with Fury. If not, see https://www.gnu.org/licenses/gpl-3.0.html.
 */
@@ -43,19 +43,27 @@ function rh_fury_add_info_notice() {
 	// don’t do anything if site is not tracking
 	if ( ! rh_fury_site_is_tracking() || rh_fury_disable() ) return;
 	// don’t add javascript if the gdpr cookie is set to true
-	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr']  ) :
+	// phpcs:disable WordPress.VIP.ValidatedSanitizedInput.MissingUnslash, WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
+	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) :
+	// phpcs:enable
 	// add javascript
+	// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_system_read_file_get_contents
 	$javascript = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/js/gdpr-notice.min.js' );
+	// phpcs:enable
+	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	?>
 <script><?php echo str_replace( '//# sourceMappingURL=gdpr-notice.min.js.map', '', $javascript ); ?></script>
 	<?php
+	// phpcs:enable
 	endif;
 	
 	// check for cookie
 	if ( isset( $_COOKIE['mws-gdpr'] ) ) return;
 	
 	// add stylesheet
+	// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_system_read_file_get_contents
 	$stylesheet = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/style/style.min.css' );
+	// phpcs:enable
 	
 	// get privacy link
 	$privacy_link = get_option( 'rh_fury_privacy_link' );
@@ -65,19 +73,27 @@ function rh_fury_add_info_notice() {
 		
 		$privacy_link = get_option( 'rh_fury_privacy_link' );
 	}
+	
+	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	?>
 <style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
+	<?php // phpcs:enable ?>
 
 <div id="gdpr-notice" class="gdpr-notice<?php echo ( wp_is_mobile() ? ' gdpr-mobile' : ' gdpr-desktop' ) . ( ! get_option( 'rh_fury_design_old' ) ? ' fullscreen' : '' ); ?>">
 	<div class="container wrapper">
 		<div class="notice-content">
-			<p><?php _e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate tracking services such as Google Analytics, which uses cookies to anonymously store and analyse your user behaviour. For this, we need your consent, which you can revoke at any time.', 'rh-fury' ); ?><br>
-			<?php printf( __( 'For more information about the services used, please, see our %s.', 'rh-fury' ), '<a href="' . $privacy_link . '" class="datenschutz-open-close">' . __( 'privacy policy', 'rh-fury' ) . '</a>' ); ?></p>
+			<p><?php esc_html_e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate tracking services such as Google Analytics, which uses cookies to anonymously store and analyse your user behaviour. For this, we need your consent, which you can revoke at any time.', 'rh-fury' ); ?><br>
+			<?php
+			/* translators: %s: link to privacy policy */
+			printf( esc_html__( 'For more information about the services used, please, see our %s.', 'rh-fury' ), '<a href="' . esc_attr( $privacy_link ) . '" class="datenschutz-open-close">' . esc_html__( 'privacy policy', 'rh-fury' ) . '</a>' );
+			?></p>
 		</div>
+		<?php // phpcs:disable WordPress.WhiteSpace.PrecisionAlignment.Found ?>
 		
+		<?php // phpcs:enable ?>
 		<div class="notice-buttons">
-			<a id="gdpr-yes" class="btn btn-primary"><?php _e( 'Allow', 'rh-fury' ); ?></a>
-			<a id="gdpr-no" class="gdpr-no-button"><?php _e( 'Prohibit', 'rh-fury' ); ?></a>
+			<a id="gdpr-yes" class="btn btn-primary"><?php esc_html_e( 'Allow', 'rh-fury' ); ?></a>
+			<a id="gdpr-no" class="gdpr-no-button"><?php esc_html_e( 'Prohibit', 'rh-fury' ); ?></a>
 		</div>
 	</div>
 </div>
@@ -152,7 +168,9 @@ function rh_fury_zephyr_tracking_code() {
 ";
 	}
 	
+	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $options . ( $disabled ? '-->' : '' ) . '</div>';
+	// phpcs:enable
 }
 
 add_action( 'wp_footer', 'rh_fury_zephyr_tracking_code' );
@@ -175,7 +193,9 @@ function rh_fury_aster_tracking_code() {
 		// set theme options "empty" to avoid our default tracking 
 		$tocki_redux_themeoptions['tocki_redux_footer'] = '<script></script>';
 		
+		// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 		echo '<div id="rh-fury-tracking">' . ( $disabled ? '<!--' : '' ) . $option . ( $disabled ? '-->' : '' ) . '</div>';
+		// phpcs:enable
 	}
 	else {
 		// set theme options "empty" to avoid our default tracking
@@ -197,9 +217,11 @@ function rh_fury_check_gdpr_cookie() {
 	$disabled = false;
 	
 	// disable if tracking nor allowed neither already asked for
+	// phpcs:disable WordPress.VIP.ValidatedSanitizedInput.MissingUnslash, WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
 	if ( ! isset( $_COOKIE['mws-gdpr'] ) || ! $_COOKIE['mws-gdpr'] ) {
 		$disabled = true;
 	}
+	// phpcs:enable
 	
 	return $disabled;
 }
@@ -294,9 +316,11 @@ add_action( 'customize_save_after', 'rh_fury_detect_tracking_scripts' );
  * @return	bool
  */
 function rh_fury_disable() {
+	// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
 	if ( isset( $_GET['rh_fury_disable'] ) && $_GET['rh_fury_disable'] === 'true' ) {
 		return true;
 	}
+	// phpcs:enable
 	
 	return false;
 }
