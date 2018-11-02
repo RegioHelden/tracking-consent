@@ -58,7 +58,7 @@ function tracking_consent_add_info_notice() {
 	endif;
 	
 	// check for cookie
-	if ( isset( $_COOKIE['mws-gdpr'] ) ) return;
+	if ( isset( $_COOKIE['mws-gdpr'] ) && $_COOKIE['mws-gdpr'] ) return;
 	
 	// add stylesheet
 	// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_system_read_file_get_contents
@@ -80,9 +80,26 @@ function tracking_consent_add_info_notice() {
 	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	?>
 <style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
-	<?php // phpcs:enable ?>
-
-<div id="gdpr-notice" class="gdpr-notice<?php echo ( wp_is_mobile() ? ' gdpr-mobile' : ' gdpr-desktop' ) . ( ! get_option( 'tracking_consent_design_old' ) ? ' fullscreen' : '' ); ?>">
+	<?php
+	// phpcs:enable
+	$classes = 'gdpr-notice';
+	
+	if ( wp_is_mobile() ) {
+		$classes .= ' gdpr-mobile';
+	}
+	else {
+		$classes .= ' gdpr-desktop';
+	}
+	
+	if ( ! get_option( 'tracking_consent_design_old' ) ) {
+		$classes .= ' fullscreen';
+	}
+	
+	if ( defined( 'RH_CONFIG' ) ) {
+		$classes .= ' rh';
+	}
+	?>
+<div id="gdpr-notice" class="<?php echo esc_attr( $classes ); ?>">
 	<div class="container wrapper">
 		<div class="notice-content">
 			<p><?php esc_html_e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate tracking services such as Google Analytics, which uses cookies to anonymously store and analyse your user behaviour. For this, we need your consent, which you can revoke at any time.', 'tracking-consent' ); ?><br>
@@ -104,6 +121,19 @@ function tracking_consent_add_info_notice() {
 }
 
 add_action( 'wp_footer', 'tracking_consent_add_info_notice' );
+
+if ( ! defined( 'RH_CONFIG' ) ) :
+/**
+ * Customizer settings.
+ * 
+ * @param	WP_Customize_Manager		$wp_customize Theme Customizer object
+ */
+function tracking_consent_customizer_register( $wp_customize ) {
+	// TODO
+}
+
+add_action( 'customize_register', 'tracking_consent_customizer_register', 20 );
+endif;
 
 // only on zephyr projects
 // see: https://docs.aurora.ci/handbook/environment-variable.html

@@ -7,7 +7,10 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	var notice = document.getElementById( 'gdpr-notice' );
 	
 	// initialize on page load
-	access_log();
+	if ( notice.classList.contains( 'rh' ) ) {
+		access_log();
+	}
+	
 	set_height();
 	toggle_conversion_codes();
 	
@@ -21,8 +24,11 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			set_cookie( 'mws-gdpr', true, 30 );
 			set_cookie( 'rh_armor_access', 1, 30 );
 			notice.remove();
-			click_button( 'allow' );
 			toggle_conversion_codes();
+			
+			if ( notice.classList.contains( 'rh' ) ) {
+				click_button( 'allow' );
+			}
 			
 			if ( notice && ! notice.classList.contains( 'fullscreen' ) ) {
 				document.body.removeAttribute( 'style' );
@@ -83,8 +89,11 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			set_cookie( 'mws-gdpr', false, 1 );
 			set_cookie( 'rh_armor_access', 1, 1 );
 			notice.remove();
-			click_button( 'prohibit' );
 			toggle_conversion_codes();
+			
+			if ( notice.classList.contains( 'rh' ) ) {
+				click_button( 'prohibit' );
+			}
 			
 			if ( notice && ! notice.classList.contains( 'fullscreen' ) ) {
 				document.body.removeAttribute( 'style' );
