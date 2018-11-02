@@ -2,7 +2,7 @@ variables:
     GIT_SUBMODULE_STRATEGY: recursive
     PHOENIX_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     PHOENIX_PATH_TEST_PLUGINS: /var/www/phoenix/wp-content/plugins
-    PROJECT_NAME: rh-fury
+    PROJECT_NAME: tracking-consent
     WDEX_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     WD50_PATH_PRODUCTION_PLUGINS: /htdocs/wp-content/plugins
     WD50_PATH_PRODUCTION_THEMES: /htdocs/wp-content/themes
