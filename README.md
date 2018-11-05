@@ -27,3 +27,10 @@ Currently supported onclick events:
 * Matomo/Piwik
 
 `onclick` content with these event tracking scripts are automatically replaced if the user doesn’t want to be tracked or didn’t decide yet. If you need support for other `onclick` events, feel free to create an issue or a pull request.
+
+## Supported languages
+
+* English
+* French
+* German
+* Italian
