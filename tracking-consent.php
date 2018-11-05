@@ -35,11 +35,10 @@ function tracking_consent_load_textdomain() {
 
 add_action( 'init', 'tracking_consent_load_textdomain' );
 
-
 /**
- * Add the “cookie” information notice.
+ * Add the JavaScript and CSS to the head.
  */
-function tracking_consent_add_info_notice() {
+function tracking_consent_add_assets() {
 	// don’t do anything if site is not tracking
 	if ( ! tracking_consent_site_is_tracking() || tracking_consent_disable() ) return;
 	// don’t add javascript if the gdpr cookie is set to true
@@ -52,7 +51,7 @@ function tracking_consent_add_info_notice() {
 	// phpcs:enable
 	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	?>
-<script><?php echo str_replace( '//# sourceMappingURL=gdpr-notice.min.js.map', '', $javascript ); ?></script>
+	<script><?php echo trim( str_replace( '//# sourceMappingURL=gdpr-notice.min.js.map', '', $javascript ) ); ?></script>
 	<?php
 	// phpcs:enable
 	endif;
@@ -64,6 +63,24 @@ function tracking_consent_add_info_notice() {
 	// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_system_read_file_get_contents
 	$stylesheet = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/style/style.min.css' );
 	// phpcs:enable
+	
+	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+	?>
+<style><?php echo trim( str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ) ); ?></style>
+	<?php
+	// phpcs:enable
+}
+
+add_action( 'wp_head', 'tracking_consent_add_assets', 100 );
+
+/**
+ * Add the “cookie” information notice.
+ */
+function tracking_consent_add_info_notice() {
+	// don’t do anything if site is not tracking
+	if ( ! tracking_consent_site_is_tracking() || tracking_consent_disable() ) return;
+	// check for cookie
+	if ( isset( $_COOKIE['mws-gdpr'] ) ) return;
 	
 	// get privacy link
 	$privacy_link = get_option( 'tracking_consent_privacy_link' );
@@ -77,11 +94,7 @@ function tracking_consent_add_info_notice() {
 		$privacy_link = get_privacy_policy_url();
 	}
 	
-	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
-	?>
-<style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
-	<?php
-	// phpcs:enable
+	// get classes
 	$classes = 'gdpr-notice';
 	
 	if ( wp_is_mobile() ) {
