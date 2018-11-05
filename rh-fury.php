@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.20
+Version:		0.21
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -35,11 +35,10 @@ function rh_fury_load_textdomain() {
 
 add_action( 'init', 'rh_fury_load_textdomain' );
 
-
 /**
- * Add the “cookie” information notice.
+ * Add the JavaScript and CSS to the head.
  */
-function rh_fury_add_info_notice() {
+function rh_fury_add_assets() {
 	// don’t do anything if site is not tracking
 	if ( ! rh_fury_site_is_tracking() || rh_fury_disable() ) return;
 	// don’t add javascript if the gdpr cookie is set to true
@@ -52,7 +51,7 @@ function rh_fury_add_info_notice() {
 	// phpcs:enable
 	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	?>
-<script><?php echo str_replace( '//# sourceMappingURL=gdpr-notice.min.js.map', '', $javascript ); ?></script>
+	<script><?php echo trim( str_replace( '//# sourceMappingURL=gdpr-notice.min.js.map', '', $javascript ) ); ?></script>
 	<?php
 	// phpcs:enable
 	endif;
@@ -65,20 +64,36 @@ function rh_fury_add_info_notice() {
 	$stylesheet = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/style/style.min.css' );
 	// phpcs:enable
 	
-	// get privacy link
-	$privacy_link = get_option( 'rh_fury_privacy_link' );
-	
-	if ( $privacy_link === false ) {
-		add_option( 'rh_fury_privacy_link', '/datenschutz/' );
-		
-		$privacy_link = get_option( 'rh_fury_privacy_link' );
-	}
-	
 	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	?>
-<style><?php echo str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ); ?></style>
-	<?php // phpcs:enable ?>
+<style><?php echo trim( str_replace( '/*# sourceMappingURL=style.min.css.map */', '', $stylesheet ) ); ?></style>
+	<?php
+	// phpcs:enable
+}
 
+add_action( 'wp_head', 'rh_fury_add_assets', 100 );
+
+/**
+ * Add the “cookie” information notice.
+ */
+function rh_fury_add_info_notice() {
+	// don’t do anything if site is not tracking
+	if ( ! rh_fury_site_is_tracking() || rh_fury_disable() ) return;
+	// check for cookie
+	if ( isset( $_COOKIE['mws-gdpr'] ) ) return;
+	
+	// get privacy link
+	$privacy_link = get_option( 'tracking_consent_privacy_link' );
+	
+	if ( $privacy_link === false && defined( 'RH_CONFIG' ) ) {
+		add_option( 'tracking_consent_privacy_link', '/datenschutz/' );
+		
+		$privacy_link = get_option( 'tracking_consent_privacy_link' );
+	}
+	else if ( $privacy_link === false && ! defined( 'RH_CONFIG' ) ) {
+		$privacy_link = get_privacy_policy_url();
+	}
+	?>
 <div id="gdpr-notice" class="gdpr-notice<?php echo ( wp_is_mobile() ? ' gdpr-mobile' : ' gdpr-desktop' ) . ( ! get_option( 'rh_fury_design_old' ) ? ' fullscreen' : '' ); ?>">
 	<div class="container wrapper">
 		<div class="notice-content">
