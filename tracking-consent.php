@@ -58,7 +58,7 @@ function tracking_consent_add_info_notice() {
 	endif;
 	
 	// check for cookie
-	if ( isset( $_COOKIE['mws-gdpr'] ) && $_COOKIE['mws-gdpr'] ) return;
+	if ( isset( $_COOKIE['mws-gdpr'] ) ) return;
 	
 	// add stylesheet
 	// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_system_read_file_get_contents
@@ -91,7 +91,7 @@ function tracking_consent_add_info_notice() {
 		$classes .= ' gdpr-desktop';
 	}
 	
-	if ( ! get_option( 'tracking_consent_design_old' ) ) {
+	if ( ! get_option( 'tracking_consent_design_bottom' ) ) {
 		$classes .= ' fullscreen';
 	}
 	
@@ -129,10 +129,68 @@ if ( ! defined( 'RH_CONFIG' ) ) :
  * @param	WP_Customize_Manager		$wp_customize Theme Customizer object
  */
 function tracking_consent_customizer_register( $wp_customize ) {
-	// TODO
+	$wp_customize->add_section( 'tracking_consent', [
+		'capability' => 'edit_theme_options',
+		'theme_supports' => '',
+		'title' => __( 'Tracking', 'tracking-consent' ),
+	] );
+	
+	$wp_customize->add_setting( 'tracking_js_textarea', [
+		'default' => '',
+		'type' => 'option',
+		'capability' => 'edit_theme_options',
+		'transport' => '',
+	] );
+	
+	$wp_customize->add_control( 'tracking_js_textarea', [
+		'type' => 'code_editor',
+		'setting' => 'js',
+		'input_attrs' => [
+			'class' => 'code',
+			// Ensures contents displayed as LTR instead of RTL.
+		],
+		'priority' => 10,
+		'section' => 'tracking_consent',
+		'label' => __( 'Tracking JavaScript code', 'tracking-consent' ),
+		'description' => __( 'Don’t forget to add a beginning &lt;script&gt; and an ending &lt;/script&gt;.', 'tracking-consent' ),
+	] );
+	
+	$wp_customize->add_setting( 'tracking_consent_design_bottom', array(
+		'default' => 0,
+		'type' => 'option',
+		'capability' => 'edit_theme_options',
+		'sanitize_callback' => 'rh_sanitize_checkbox',
+		'transport' => '',
+	) );
+	
+	$wp_customize->add_control( 'tracking_consent_design_bottom', array(
+		'priority' => 10,
+		'section' => 'tracking_consent',
+		'label' => __( 'Discreet design', 'tracking-consent' ),
+		'type' => 'checkbox',
+	) );
 }
 
 add_action( 'customize_register', 'tracking_consent_customizer_register', 20 );
+
+/**
+ * Add the tracking code to the footer on Zephyr projects.
+ */
+function tracking_consent_tracking_code() {
+	$disabled = tracking_consent_check_gdpr_cookie();
+	$options = '';
+	
+	if ( get_option( 'tracking_js_textarea' ) ) {
+		// remove every html comment
+		$options .= preg_replace( '/<!--((.|\n)*?)-->/', '', get_option( 'tracking_js_textarea' ) );
+	}
+	
+	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+	echo '<div id="tracking-consent-tracking">' . ( $disabled ? '<!--' : '' ) . $options . ( $disabled ? '-->' : '' ) . '</div>';
+	// phpcs:enable
+}
+
+add_action( 'wp_footer', 'tracking_consent_tracking_code' );
 endif;
 
 // only on zephyr projects
