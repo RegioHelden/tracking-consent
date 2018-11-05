@@ -168,20 +168,20 @@ function tracking_consent_customizer_register( $wp_customize ) {
 		'description' => __( 'Don’t forget to add a beginning &lt;script&gt; and an ending &lt;/script&gt;.', 'tracking-consent' ),
 	] );
 	
-	$wp_customize->add_setting( 'tracking_consent_design_bottom', array(
+	$wp_customize->add_setting( 'tracking_consent_design_bottom', [
 		'default' => 0,
 		'type' => 'option',
 		'capability' => 'edit_theme_options',
 		'sanitize_callback' => 'rh_sanitize_checkbox',
 		'transport' => '',
-	) );
+	] );
 	
-	$wp_customize->add_control( 'tracking_consent_design_bottom', array(
+	$wp_customize->add_control( 'tracking_consent_design_bottom', [
 		'priority' => 10,
 		'section' => 'tracking_consent',
 		'label' => __( 'Discreet design', 'tracking-consent' ),
 		'type' => 'checkbox',
-	) );
+	] );
 }
 
 add_action( 'customize_register', 'tracking_consent_customizer_register', 20 );
