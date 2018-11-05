@@ -5,7 +5,7 @@ Tracking Consent is a GDPR-compliant tool set to disable or re-enable tracking. 
 ## Requirements
 
 * PHP 5.6
-* WordPress 4.8.6 or higher
+* WordPress 4.9.6 or higher
 
 ## Configuration
 
