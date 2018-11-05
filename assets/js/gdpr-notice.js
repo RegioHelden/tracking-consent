@@ -7,7 +7,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	var notice = document.getElementById( 'gdpr-notice' );
 	
 	// initialize on page load
-	if ( notice.classList.contains( 'rh' ) ) {
+	if ( notice && notice.classList.contains( 'rh' ) ) {
 		access_log();
 	}
 	
@@ -232,6 +232,17 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			}
 			else {
 				var onclick = element.getAttribute( 'onclick' );
+				
+				// change onclick only for whitelist elements
+				if (
+					// Google
+					onclick.indexOf( 'gtag' ) === -1
+					&& onclick.indexOf( 'goog_report' ) === -1
+					// Matomo/Piwik
+					&& onclick.indexOf( '_paq' ) === -1
+				) {
+					continue;
+				}
 				
 				// store onclick attribute in separate data attribute
 				element.setAttribute( 'data-onclick', onclick );
