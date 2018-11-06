@@ -13,7 +13,7 @@ Tracking Consent is a GDPR-compliant tool set to disable or re-enable tracking i
 1. Minify the JavaScript in `assets/js` to `assets/js/gdpr-notice.min.js`.
 1. Compile the SCSS in `assets/style/scss` to `assets/style/style.css` and the minified version to `assets/style/style.min.css`.
 1. Activate the plugin through the ‘Plugins’ screen in WordPress.
-1. Use the **Design > Customizer > Tracking** section to configure the plugin.
+1. Use the **Appearance > Customize > Tracking** section to configure the plugin.
 
 ## Configuration
 
