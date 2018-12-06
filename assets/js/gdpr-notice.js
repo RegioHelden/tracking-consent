@@ -20,7 +20,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		gdpr_yes.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', true, 30 );
 			set_cookie( 'rh_armor_access', 1, 30 );
-			notice.remove();
+			if ( notice !== null ) notice.remove();
 			click_button( 'allow' );
 			toggle_conversion_codes();
 			
@@ -82,7 +82,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
 		gdpr_no.addEventListener( 'click', function( event ) {
 			set_cookie( 'mws-gdpr', false, 1 );
 			set_cookie( 'rh_armor_access', 1, 1 );
-			notice.remove();
+			if ( notice !== null ) notice.remove();
 			click_button( 'prohibit' );
 			toggle_conversion_codes();
 			
