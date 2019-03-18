@@ -2,7 +2,7 @@
 /*
 Plugin Name:	Fury
 Description:	GDPR-compliant tool set to disable or re-enable tracking.
-Version:		0.25
+Version:		0.26
 Author:			Matthias Kittsteiner
 License:		GPL3
 License URI:	https://www.gnu.org/licenses/gpl-3.0.html
@@ -94,10 +94,10 @@ function rh_fury_add_info_notice() {
 		$privacy_link = get_privacy_policy_url();
 	}
 	?>
-<div id="gdpr-notice" class="gdpr-notice<?php echo ( wp_is_mobile() ? ' gdpr-mobile' : ' gdpr-desktop' ) . ( ! get_option( 'rh_fury_design_old' ) ? ' fullscreen' : '' ); ?>">
+<div id="gdpr-notice" class="gdpr-notice<?php echo ( wp_is_mobile() ? ' gdpr-mobile' : ' gdpr-desktop' ); ?>">
 	<div class="container wrapper">
 		<div class="notice-content">
-			<p><?php esc_html_e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate tracking services such as Google Analytics, which uses cookies to anonymously store and analyse your user behaviour. For this, we need your consent, which you can revoke at any time.', 'rh-fury' ); ?><br>
+			<p><?php esc_html_e( 'In order to be able to offer you the best possible user experience on this website in the future, we would like to activate advanced tracking services. For this, we need your consent, which you can revoke at any time.', 'rh-fury' ); ?><br>
 			<?php
 			/* translators: %s: link to privacy policy */
 			printf( esc_html__( 'For more information about the services used, please, see our %s.', 'rh-fury' ), '<a href="' . esc_attr( $privacy_link ) . '" class="datenschutz-open-close">' . esc_html__( 'privacy policy', 'rh-fury' ) . '</a>' );
@@ -161,26 +161,6 @@ function rh_fury_zephyr_tracking_code() {
 	if ( get_option( 'tracking_js_textarea' ) ) {
 		// remove every html comment
 		$options .= preg_replace( '/<!--((.|\n)*?)-->/', '', get_option( 'tracking_js_textarea' ) );
-	}
-	
-	if ( get_option( 'rh_analytics_id' ) && ! get_theme_mod( 'rh_analytics_disable' ) ) {
-		$options .= "
-<script>
-	// disable tracking if the opt-out cookie exists.
-	var disableStr = 'ga-disable-" . get_option( 'rh_analytics_id' ) . "';
-	if (document.cookie.indexOf(disableStr + '=true') > -1) {
-		window[disableStr] = true;
-	}
-	
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', '" . get_option( 'rh_analytics_id' ) . "', 'auto');
-	ga('create', 'UA-63619645-1', 'auto', 'clientTracker');
-	ga('send', 'pageview');
-	ga('set', 'anonymizeIp', true);
-	ga('clientTracker.send', 'pageview');
-	" . do_action( 'rh_analytics_after_include' ) . "
-</script>
-";
 	}
 	
 	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
